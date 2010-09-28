@@ -1,0 +1,11 @@
+*1.0.1*
+
+* Fixed bug in the "scorm extract" command that caused the newly extracted
+  package to be cleaned up directly after it was extracted.
+
+* Fixed bug in Scorm::Package#package? that caused it to not properly identify
+  zip files as packages.
+
+*1.0.0*
+
+* First public release

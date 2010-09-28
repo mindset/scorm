@@ -4,7 +4,7 @@ module Scorm::Command
       package = args.shift.strip rescue ''
       raise(CommandFailed, "Invalid package.") if package == ''
 
-      Scorm::Package.open(package) do |pkg|
+      Scorm::Package.open(package, :cleanup => false) do |pkg|
         display "Extracted package to #{pkg.path}"
       end
     end

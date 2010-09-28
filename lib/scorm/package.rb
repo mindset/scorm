@@ -140,12 +140,10 @@ module Scorm
     end
     
     # This will only return +true+ if what was opened was an actual zip file.
+    # It returns +false+ if what was opened was a filesystem directory.
     def package?
-      # If the path to the course in the repository is the same as the path to
-      # the package, we can assume that what was really opened was a directory
-      # in the course repository and therefor not a package.
-      return false if File.extname(@package)
-      return true 
+      return true if File.extname(@package) == '.zip'
+      return false
     end
     
     # Reads a file from the package. If the file is not extracted yet (all files
