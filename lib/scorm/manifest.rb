@@ -6,12 +6,23 @@ require 'scorm/resource'
 module Scorm
   class Manifest
     
-    SUPPORTED_VERSIONS = ['2004 3rd Edition', 'CAM 1.3']
+    # Versions of the SCORM standard that is supported when running in
+    # strict mode. When not running in strict mode, the library will not
+    # care about the version specified in the package manifest and will
+    # simply try its best to parse the information that it finds.
+    SUPPORTED_VERSIONS = ['2004 3rd Edition', 'CAM 1.3', '1.2']
+    
+    # List of XML and XML Schema files that are part of the manifest for
+    # the package.
+    MANIFEST_FILES = %w(imsmanifest.xml adlcp_rootv1p2.xsd ims_xml.xsd
+       imscp_rootv1p1p2.xsd imsmd_rootv1p2p1.xsd)
+    
+    # Files that might be present in a package, but that should not be
+    # interprested as resources. All files starting with a "." (i.e. hidden
+    # files) is also implicitly included in this list.
     RESOURCES_BLACKLIST = [
-      'imsmanifest.xml', 'adlcp_rootv1p2.xsd', 'ims_xml.xsd',
-      'imscp_rootv1p1p2.xsd', 'imsmd_rootv1p2p1.xsd',
       '__MACOSX', 'desktop.ini', 'Thumbs.db'
-    ]
+    ].concat(MANIFEST_FILES)
     
     attr_accessor :identifier
     attr_accessor :metadata
@@ -92,6 +103,7 @@ module Scorm
       # Read additional resources as assets (this is a fix for packages that
       # don't correctly specify all resource dependencies in the manifest).
       @package.files.each do |file|
+        next if File.directory?(file)
         next if RESOURCES_BLACKLIST.include?(File.basename(file))
         next if File.basename(file) =~ /^\./
         next unless self.resources(:with_file => file).empty?

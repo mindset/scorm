@@ -39,7 +39,7 @@
   <resources>
     <resource identifier="RES" type="webcontent" href="example.html" adlcp:scormtype="sco">
       <file href="example.html"/>
-      <file href="example.png"/>
+      <file href="images/large/example.png"/>
     </resource>
   </resources>
 </manifest>

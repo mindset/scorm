@@ -6,9 +6,24 @@ module Scorm::Command
         raise(CommandFailed, "Invalid package, didn't find any imsmanifest.xml file.")
       end
       
-      # TODO: Bundle package...
+      outname = File.basename(File.expand_path(name)) + '.zip'
       
-      display "Created new SCORM package \"#{name}.zip\"."
+      require 'zip/zip'
+      Zip::ZipFile.open(outname, Zip::ZipFile::CREATE) do |zipfile|
+        Scorm::Package.open(name) do |pkg|
+          Scorm::Manifest::MANIFEST_FILES.each do |file|
+            zipfile.get_output_stream(file) {|f| f.write(pkg.file(file)) }
+            display file
+          end
+          files = pkg.manifest.resources.map {|r| r.files }.flatten.uniq
+          files.each do |file|
+            zipfile.get_output_stream(file) {|f| f.write(pkg.file(file)) }
+            display file
+          end
+        end
+      end
+      
+      display "Created new SCORM package \"#{outname}\"."
     end
   end
 end

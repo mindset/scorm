@@ -1,0 +1,15 @@
+This is an example of a very basic SCORM package. It contains one SCO (example.html) and one Asset (this file) and a total of three files:
+
+  - example.html
+  - images/large/example.png
+  - README
+
+In addition to these it also contains an example manifest (imsmanifest.xml)
+and a set of required XML schema files (adlcp_rootv1p2.xsd, ims_xml.xsd,
+imscp_rootv1p1p2.xsd, imsmd_rootv1p2p1.xsd).
+
+The README file is not explicitly specified in the manifest as an asset, but
+is automatically included by the "scorm bundle" command.
+
+The package is compatible with the "Content Aggregation Model" in SCORM 2004
+3rd Edition.

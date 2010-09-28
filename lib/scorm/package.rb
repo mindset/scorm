@@ -54,21 +54,28 @@ module Scorm
       @options = DEFAULT_LOAD_OPTIONS.merge(options)
       @package = filename.respond_to?(:path) ? filename.path : filename
       
-      i = nil
-      begin
-        # Decide on a name for the package.
-        @name = [(@options[:name] || File.basename(@package, File.extname(@package))), i].flatten.join
+      # Check if package is a directory or a file.
+      if File.directory?(@package)
+        @name = File.basename(@package)
+        @repository = File.dirname(@package)
+        @path = File.expand_path(@package)
+      else
+        i = nil
+        begin
+          # Decide on a name for the package.
+          @name = [(@options[:name] || File.basename(@package, File.extname(@package))), i].flatten.join
       
-        # Set the path for the extracted package.
-        @repository = @options[:repository] || File.dirname(@package)
-        @path = File.join(@repository, @name)
+          # Set the path for the extracted package.
+          @repository = @options[:repository] || File.dirname(@package)
+          @path = File.expand_path(File.join(@repository, @name))
         
-        # First try is nil, subsequent tries sets and increments the value with 
-        # one starting at zero.
-        i = (i || 0) + 1
+          # First try is nil, subsequent tries sets and increments the value with 
+          # one starting at zero.
+          i = (i || 0) + 1
 
-      # Make sure the generated path is unique.
-      end while File.exists?(@path)
+        # Make sure the generated path is unique.
+        end while File.exists?(@path)
+      end
       
       # Extract the package
       extract!
@@ -134,10 +141,10 @@ module Scorm
     
     # This will only return +true+ if what was opened was an actual zip file.
     def package?
-      # If the path to the course in the repository is that same as the path to
+      # If the path to the course in the repository is the same as the path to
       # the package, we can assume that what was really opened was a directory
       # in the course repository and therefor not a package.
-      return false if File.expand_path(@path) == File.expand_path(@package)
+      return false if File.extname(@package)
       return true 
     end
     
@@ -188,11 +195,16 @@ module Scorm
     
     # Returns an array with the paths to all the files in the package.
     def files
-      entries = []
-      Zip::ZipFile::foreach(@package) do |entry|
-        entries << entry.name unless entry.name[-1..-1] == '/'
+      if File.directory?(@package)
+        Dir.glob(File.join(File.join(File.expand_path(@package), '**'), '*')).reject {|f|
+          File.directory?(f) }.map {|f| f.sub(/^#{File.expand_path(@package)}\/?/, '') }
+      else
+        entries = []
+        Zip::ZipFile::foreach(@package) do |entry|
+          entries << entry.name unless entry.name[-1..-1] == '/'
+        end
+        entries
       end
-      entries
     end
   end
 end

@@ -11,8 +11,7 @@ module Scorm::Command
         display "Identifier: #{pkg.manifest.identifier}"
         display ""
         display "== Manifest =="
-        %w(imsmanifest.xml adlcp_rootv1p2.xsd ims_xml.xsd
-           imscp_rootv1p1p2.xsd imsmd_rootv1p2p1.xsd).each do |file|
+        Scorm::Manifest::MANIFEST_FILES.each do |file|
          if pkg.exists?(file)
            display "#{file} -> OK"
           else
