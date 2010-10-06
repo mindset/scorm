@@ -1,3 +1,8 @@
+*1.0.2*
+
+* The fix to Scorm::Package#package? didn't work as intended, tried another
+  solution.
+
 *1.0.1*
 
 * Fixed bug in the "scorm extract" command that caused the newly extracted

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'scorm'
-  s.version     = '1.0.1'
+  s.version     = '1.0.2'
   s.summary     = 'Ruby library for reading, extracting and generating SCORM files.'
   s.description = 'SCORM is a Ruby library for reading and extracting Shareable Content Object Reference Model (SCORM) files. SCORM is a standardized package format used mainly by e-learning software to help with the exchange of course material between systems in an interoperable way. This gem supports SCORM 1.2 and SCORM 2004.'
 
